@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./BuildControls.modal.css";
+import classes from "./BuildControls.module.css";
 import BuildControl from "./BuildControl/BuildControl";
 const controls = [
   { label: "Salad", type: "salad" },
@@ -22,7 +22,8 @@ const buildControls = (props) => (
     ))}
     <button 
         disabled={!props.purchaseable} 
-        className={classes.OrderButton}>Order Now</button>
+        className={classes.OrderButton}
+        onClick={props.ordered}>Order Now</button>
   </div>
 );
 export default buildControls;
