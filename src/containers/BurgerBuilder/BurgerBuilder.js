@@ -18,7 +18,19 @@ class BurgerBuilder extends Component{
             cheese: 0,
             meat: 0,
         },
-        totalPrice: 4
+        totalPrice: 4,
+        purchaseable: false,
+    }
+    // this is a method
+    updatePurchaseState (ingredients) {
+        const sum = Object.keys(ingredients).map(igKey => {
+            return ingredients[igKey]
+        }).reduce((sum, el) => {
+            return sum + el;
+        }, 0);
+        this.setState({ 
+            purchaseable: sum > 0
+        })
     }
 
     addIngredientHandler = (type) => {
@@ -34,12 +46,13 @@ class BurgerBuilder extends Component{
         this.setState({
             totalPrice: newPrice,
             ingredients: updatedIngredients,
-        })
+        });
+        this.updatePurchaseState(updatedIngredients);
     }
 
     removeIngredientHandler = (type) => {
         const oldCount = this.state.ingredients[type];
-        if(oldPrice <= 0){
+        if(oldCount <= 0){
             return;
         }
         const updatedCount = oldCount - 1;
@@ -53,18 +66,21 @@ class BurgerBuilder extends Component{
         this.setState({
             totalPrice: newPrice,
             ingredients: updatedIngredients,
-        })
+        });
+        this.updatePurchaseState(updatedIngredients);
     }
 
     render(){
+
         const disabledInfo = {
             ...this.state.ingredients
         }
-        console.log(disabledInfo);
+
         for(let key in disabledInfo){
-            console.log(disabledInfo[key]);
             disabledInfo[key] = disabledInfo[key] <= 0;
+            console.log(disabledInfo[key])
         }
+
         return(
             <Aux>
                 <Burger 
@@ -73,6 +89,8 @@ class BurgerBuilder extends Component{
                     ingredientAdded={this.addIngredientHandler}
                     ingredientRemove={this.removeIngredientHandler}
                     disabled={disabledInfo}
+                    purchaseable={this.state.purchaseable}
+                    price={this.state.totalPrice}
                 />
             </Aux>
         );
